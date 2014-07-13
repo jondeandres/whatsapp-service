@@ -3,32 +3,27 @@
 import sys, os, base64
 import time, random
 import threading
-
-path = os.path.abspath(os.path.dirname(__file__))
-if not path in sys.path:
-    sys.path.append(path)
-
-yowsuppath=os.path.join(path,'./yowsup/src/')
-
-if not yowsuppath in sys.path:
-    sys.path.append(os.path.join(path,'./yowsup/src/'))
+from  feeder import yowsup_patch
 
 from Yowsup.connectionmanager import YowsupConnectionManager
-
-DEFAULT_CONFIG = os.path.join(path,'config')
-
+from Yowsup.Common.debugger import Debugger as YowsupDebugger
 
 class Daemon:
     def __init__(self, username, password):
         self.username = username
         self.password = password
+
+        yowsup_patch.patch()
+
         self.connectionManager = YowsupConnectionManager()
         self.methodsInterface = self.connectionManager.getMethodsInterface()
         self.signalsInterface = self.connectionManager.getSignalsInterface()
 
         self.setup()
 
+
     def setup(self):
+        YowsupDebugger.enabled=False
         self.connectionManager.setAutoPong(True)
         self.signalsInterface.registerListener("auth_success", self.onAuthSuccess)
         self.signalsInterface.registerListener("auth_fail", self.onAuthFailed)
@@ -73,5 +68,6 @@ class Daemon:
         self.methodsInterface.call("message_send", ("34635730544@s.whatsapp.net", "Hello World!"))
 
 
-d = Daemon("34684070575", "xDkWCwXBOVcCLWpOM5I0oI1nu7w=")
-d.run()
+def run(username, password):
+    daemon = Daemon(username, password)
+    daemon.run()

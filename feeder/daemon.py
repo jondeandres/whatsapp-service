@@ -4,6 +4,7 @@ import sys, os, base64
 import time, random
 import threading
 from  feeder import yowsup_patch
+from feeder.zmq import sender
 
 from Yowsup.connectionmanager import YowsupConnectionManager
 from Yowsup.Common.debugger import Debugger as YowsupDebugger
@@ -13,7 +14,9 @@ class Daemon:
         self.username = username
         self.password = password
 
-        yowsup_patch.patch()
+        self.zmq_sender = sender.Sender()
+
+        yowsup_patch.patch(self.zmq_sender)
 
         self.connectionManager = YowsupConnectionManager()
         self.methodsInterface = self.connectionManager.getMethodsInterface()
@@ -32,10 +35,9 @@ class Daemon:
 
     def run(self):
         self.login()
-        threading.Thread(target=self.sender_function).start()
-
-        while True:
-            pass
+        thread = threading.Thread(target=self.sender_function)
+        thread.start()
+        thread.join
 
     def sender_function(self):
         while True:

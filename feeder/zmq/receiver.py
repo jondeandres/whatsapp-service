@@ -11,7 +11,7 @@ class Receiver:
         self.thread = None
 
     def bind(self):
-        self.socket.bind('tcp://127.0.0.1:5556')
+        self.socket.bind('tcp://*:5556')
         self.spawn_thread()
 
     def spawn_thread(self):

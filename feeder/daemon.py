@@ -23,8 +23,8 @@ class Daemon:
 
     def setup(self):
         yowsup_patch.patch(self.zmq_sender)
-        YowsupDebugger.enabled=False
 
+        YowsupDebugger.enabled=False
         self.connectionManager.setAutoPong(True)
         self.signalsInterface.registerListener("auth_success", self.onAuthSuccess)
         self.signalsInterface.registerListener("auth_fail", self.onAuthFailed)
@@ -42,6 +42,7 @@ class Daemon:
         password = base64.b64decode(bytes(self.password.encode('utf-8')))
         self.methodsInterface.call("auth_login", (self.username, password))
         self.methodsInterface.call("presence_sendAvailable",)
+        self.connectionManager.setUsername(self.username)
 
     def onMessageDelivered(self, jid, messageId):
         print "Message was delivered successfully to %s" %jid

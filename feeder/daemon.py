@@ -49,7 +49,6 @@ class Daemon:
         self.methodsInterface.call("delivered_ack", (jid, messageId))
 
     def messageACK(self, jid, messageId):
-        print 'Sending ACK'
         self.methodsInterface.call('message_ack', (jid, messageId))
 
     def onMessageReceived(self, messageId, jid, messageContent, timestamp, wantsReceipt, pushName, isBroadcast):

@@ -28,12 +28,7 @@ class Daemon:
 
         YowsupDebugger.enabled=False
         self.connectionManager.setAutoPong(True)
-        self.signalsInterface.registerListener("auth_success", self.callbacks.onAuthSuccess)
-        self.signalsInterface.registerListener("auth_fail", self.callbacks.onAuthFailed)
-        self.signalsInterface.registerListener("disconnected", self.callbacks.onDisconnected)
-        self.signalsInterface.registerListener("receipt_messageDelivered", self.callbacks.onMessageDelivered)
-        self.signalsInterface.registerListener("message_received", self.callbacks.onMessageReceived)
-        self.signalsInterface.registerListener("group_messageReceived", self.callbacks.onGroupMessageReceived)
+        self.callbacks.register()
 
     def run(self):
         self.login()

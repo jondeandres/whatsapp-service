@@ -70,10 +70,6 @@ class Daemon:
         time.sleep(1)
         self.run()
 
-    def sendMessage(self, text):
-        self.methodsInterface.call("message_send", ("34635730544@s.whatsapp.net", "Hello World!"))
-
-
 def run(username, password):
     daemon = Daemon(username, password)
     daemon.run()

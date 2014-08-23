@@ -1,8 +1,8 @@
 import zmq
 
 class Sender:
-    def __init__(self):
-        self.context = zmq.Context()
+    def __init__(self, whatsapp):
+        self.context = whatsapp.context
         self.socket = self.context.socket(zmq.REQ)
 
     def connect(self):

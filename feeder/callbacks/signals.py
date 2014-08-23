@@ -1,15 +1,8 @@
-class Callbacks:
+import time
+
+class Signals:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
-        self.signalsInterface = whatsapp.signalsInterface
-
-    def register(self):
-        self.signalsInterface.registerListener("auth_success", self.onAuthSuccess)
-        self.signalsInterface.registerListener("auth_fail", self.onAuthFailed)
-        self.signalsInterface.registerListener("disconnected", self.onDisconnected)
-        self.signalsInterface.registerListener("receipt_messageDelivered", self.onMessageDelivered)
-        self.signalsInterface.registerListener("message_received", self.onMessageReceived)
-        self.signalsInterface.registerListener("group_messageReceived", self.onGroupMessageReceived)
 
     def onMessageDelivered(self, jid, messageId):
         print "Message was delivered successfully to %s" %jid

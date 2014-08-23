@@ -2,10 +2,11 @@
 
 import sys, os, base64
 import time, random
+import zmq as libzmq
 from  feeder import yowsup_patch
-from feeder import callbacks
-from feeder.zmq import receiver
-from feeder.zmq import sender
+from feeder.callbacks import register as callbacks
+from feeder.zeromq import receiver
+from feeder.zeromq import sender
 
 from Yowsup.connectionmanager import YowsupConnectionManager
 from Yowsup.Common.debugger import Debugger as YowsupDebugger
@@ -14,12 +15,14 @@ class Daemon:
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.hashes = {}
+        self.urls = {}
+        self.context = libzmq.Context()
         self.connectionManager = YowsupConnectionManager()
         self.methodsInterface = self.connectionManager.getMethodsInterface()
         self.signalsInterface = self.connectionManager.getSignalsInterface()
-        self.zmq_sender = sender.Sender()
-        self.zmq_receiver = receiver.Receiver(self.methodsInterface)
-        self.callbacks = callbacks.Callbacks(self)
+        self.zmq_sender = sender.Sender(self)
+        self.zmq_receiver = receiver.Receiver(self)
 
         self.setup()
 
@@ -28,7 +31,7 @@ class Daemon:
 
         YowsupDebugger.enabled=False
         self.connectionManager.setAutoPong(True)
-        self.callbacks.register()
+        callbacks.register(self)
 
     def run(self):
         self.login()

@@ -23,4 +23,11 @@ class Receiver:
         while True:
             msg = json.loads(self.socket.recv())
             self.socket.send('received!')
-            self.whatsapp.call("message_send", (str(msg['jid']), str(msg['body'])))
+            self.send_message(msg)
+
+    def send_message(self, msg):
+        jid = msg['jid']
+
+        self.whatsapp.call("typing_send",(jid,))
+        self.whatsapp.call("typing_paused",(jid,))
+        self.whatsapp.call("message_send", (str(jid), str(msg['body'])))

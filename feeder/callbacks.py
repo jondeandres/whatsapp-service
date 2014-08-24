@@ -1,3 +1,6 @@
+import time
+import daemon
+
 class Callbacks:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
@@ -35,4 +38,4 @@ class Callbacks:
         print "Disconnected because %s" %reason
         if reason=="dns": time.sleep(30)
         time.sleep(1)
-        self.whatsapp.run()
+        daemon.Daemon.instance().run()

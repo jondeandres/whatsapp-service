@@ -10,6 +10,8 @@ from feeder.zmq import sender
 from Yowsup.connectionmanager import YowsupConnectionManager
 from Yowsup.Common.debugger import Debugger as YowsupDebugger
 
+_instance = None
+
 class Daemon:
     def __init__(self, username, password):
         self.username = username
@@ -20,8 +22,14 @@ class Daemon:
         self.zmq_sender = sender.Sender()
         self.zmq_receiver = receiver.Receiver(self.methodsInterface)
         self.callbacks = callbacks.Callbacks(self)
+        self.zmq_connected = False
 
         self.setup()
+
+    @staticmethod
+    def instance():
+        global _instance
+        return _instance
 
     def setup(self):
         yowsup_patch.patch(self.zmq_sender)
@@ -32,8 +40,10 @@ class Daemon:
 
     def run(self):
         self.login()
-        self.zmq_receiver.bind()
-        self.zmq_sender.connect()
+        if self.zmq_connected is False:
+            self.zmq_connected = True
+            self.zmq_receiver.bind()
+            self.zmq_sender.connect()
 
     def login(self):
         password = base64.b64decode(bytes(self.password.encode('utf-8')))
@@ -41,6 +51,13 @@ class Daemon:
         self.methodsInterface.call("presence_sendAvailable",)
         self.connectionManager.setUsername(self.username)
 
+
+
 def run(username, password):
-    daemon = Daemon(username, password)
-    daemon.run()
+    global _instance
+
+    if _instance is None:
+        _instance = Daemon(username, password)
+
+    _instance.run()
+

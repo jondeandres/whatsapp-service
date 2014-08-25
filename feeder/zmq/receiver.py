@@ -2,6 +2,8 @@ import zmq
 import threading
 import json
 import random
+from feeder.senders import text
+from feeder.senders import url_image
 
 class Receiver:
     def __init__(self, whatsapp):
@@ -11,7 +13,6 @@ class Receiver:
         self.socket = self.context.socket(zmq.REP)
 
         self.thread = None
-        self.timer = None
 
     def bind(self):
         self.socket.bind('tcp://*:5556')
@@ -26,27 +27,17 @@ class Receiver:
         while True:
             msg = json.loads(self.socket.recv())
             self.socket.send('received!')
-            self.send_message(msg)
+            self.dispatch_message(msg)
 
-    def send_message(self, msg):
-        jid = msg['jid']
+    def dispatch_message(self, msg):
+        klass = None
 
-        self.interface.call("presence_sendAvailable",)
-        self.whatsapp.contacts.addContact(jid)
-        self.interface.call("typing_send",(jid,))
-        self.interface.call("typing_paused",(jid,))
-        self.interface.call("message_send", (str(jid), str(msg['body'])))
+        if msg['type'] == 'text':
+            klass = text.Text
+        elif msg['type'] == 'url_image':
+            klass = url_image.UrlImage
 
-        self.setUnavailableTimer()
+        sender = klass(self.whatsapp, msg)
+        sender.prepare()
+        sender.send()
 
-    def setUnavailable(self):
-        print('Executing timer method')
-        self.interface.call("presence_sendUnavailable",)
-        self.timer = None
-
-    def setUnavailableTimer(self):
-        if self.Timer is not None: return
-
-        wait_time = random.randrange(10, 40)
-        self.timer = threading.Timer(wait_time, self.setUnavailable)
-        self.timer.start()

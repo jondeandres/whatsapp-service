@@ -9,8 +9,8 @@ import os
 
 environments = {
     'production' : {
-        'number': '34670712480',
-        'password': '3rRu6WJKA6jyLIwpa+FVYWAElzc='
+        'number': '34670712491',
+        'password': 'bNioAYGeFl6IT2RQnHYcgd6XQKM='
     },
     'development': {
         'number': '34670711623',

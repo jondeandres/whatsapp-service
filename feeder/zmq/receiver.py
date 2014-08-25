@@ -11,6 +11,7 @@ class Receiver:
         self.socket = self.context.socket(zmq.REP)
 
         self.thread = None
+        self.timer = None
 
     def bind(self):
         self.socket.bind('tcp://*:5556')
@@ -41,8 +42,11 @@ class Receiver:
     def setUnavailable(self):
         print('Executing timer method')
         self.interface.call("presence_sendUnavailable",)
+        self.timer = None
 
     def setUnavailableTimer(self):
+        if self.Timer is not None: return
+
         wait_time = random.randrange(10, 40)
-        timer = threading.Timer(wait_time, self.setUnavailable)
-        timer.start()
+        self.timer = threading.Timer(wait_time, self.setUnavailable)
+        self.timer.start()

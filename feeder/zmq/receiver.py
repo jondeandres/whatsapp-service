@@ -1,6 +1,7 @@
 import zmq
 import threading
 import json
+import random
 
 class Receiver:
     def __init__(self, whatsapp):
@@ -29,7 +30,17 @@ class Receiver:
     def send_message(self, msg):
         jid = msg['jid']
 
+        self.interface.call("presence_sendAvailable",)
         self.whatsapp.contacts.addContact(jid)
         self.interface.call("typing_send",(jid,))
         self.interface.call("typing_paused",(jid,))
         self.interface.call("message_send", (str(jid), str(msg['body'])))
+
+        self.setUnavailableTimer()
+
+    def setUnavailable(self):
+        self.interface.call("presence_sendUnavailable",)
+
+    def setUnavailableTimer(self):
+        wait_time = random.randrange(30, 50)
+        threading.Timer(wait_time, self.setUnavailable)

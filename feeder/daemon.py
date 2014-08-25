@@ -52,7 +52,6 @@ class Daemon:
     def login(self):
         password = base64.b64decode(bytes(self.password.encode('utf-8')))
         self.methodsInterface.call("auth_login", (self.username, password))
-        self.methodsInterface.call("presence_sendAvailable",)
         self.connectionManager.setUsername(self.username)
 
 

@@ -2,10 +2,12 @@
 
 import sys, os, base64
 import time, random
+from redis import Redis
 from  feeder import yowsup_patch
 from feeder import callbacks
 from feeder.zmq import receiver
 from feeder.zmq import sender
+from feeder.contacts import Contacts
 
 from Yowsup.connectionmanager import YowsupConnectionManager
 from Yowsup.Common.debugger import Debugger as YowsupDebugger
@@ -20,9 +22,11 @@ class Daemon:
         self.methodsInterface = self.connectionManager.getMethodsInterface()
         self.signalsInterface = self.connectionManager.getSignalsInterface()
         self.zmq_sender = sender.Sender()
-        self.zmq_receiver = receiver.Receiver(self.methodsInterface)
+        self.zmq_receiver = receiver.Receiver(self)
         self.callbacks = callbacks.Callbacks(self)
         self.zmq_connected = False
+        self.redis = Redis()
+        self.contacts = Contacts(self)
 
         self.setup()
 

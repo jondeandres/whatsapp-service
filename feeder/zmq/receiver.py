@@ -5,6 +5,7 @@ import json
 class Receiver:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
+        self.interface = whatsapp.methodsInterface
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
 
@@ -28,6 +29,7 @@ class Receiver:
     def send_message(self, msg):
         jid = msg['jid']
 
-        self.whatsapp.call("typing_send",(jid,))
-        self.whatsapp.call("typing_paused",(jid,))
-        self.whatsapp.call("message_send", (str(jid), str(msg['body'])))
+        self.whatsapp.contacts.addContact(jid)
+        self.interface.call("typing_send",(jid,))
+        self.interface.call("typing_paused",(jid,))
+        self.interface.call("message_send", (str(jid), str(msg['body'])))

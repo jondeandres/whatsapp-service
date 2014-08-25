@@ -9,12 +9,12 @@ import os
 
 environments = {
     'production' : {
-        'number': '34644298488',
-        'password': 'iggEzRpQKOA16GvCCPDF6n6qX4A='
-    },
-    'development': {
         'number': '34670712480',
         'password': '3rRu6WJKA6jyLIwpa+FVYWAElzc='
+    },
+    'development': {
+        'number': '34670711623',
+        'password': 'fra/fy7ATLkQmVY/EyN26NQkoS4='
     }
     }
 env = os.getenv('WENV') or 'development'

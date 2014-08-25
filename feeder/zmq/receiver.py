@@ -39,8 +39,10 @@ class Receiver:
         self.setUnavailableTimer()
 
     def setUnavailable(self):
+        print('Executing timer method')
         self.interface.call("presence_sendUnavailable",)
 
     def setUnavailableTimer(self):
-        wait_time = random.randrange(30, 50)
-        threading.Timer(wait_time, self.setUnavailable)
+        wait_time = random.randrange(10, 40)
+        timer = threading.Timer(wait_time, self.setUnavailable)
+        timer.start()

@@ -1,6 +1,5 @@
 from Yowsup.connectionmanager import ReaderThread
 from Yowsup.connectionmanager import YowsupConnectionManager
-from feeder.zmq import sender
 import tree_dump
 
 ReaderThread.oldParseMessage = ReaderThread.parseMessage

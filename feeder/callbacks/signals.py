@@ -1,18 +1,9 @@
 import time
-import daemon
+import feeder.daemon
 
-class Callbacks:
+class Signals:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
-        self.signalsInterface = whatsapp.signalsInterface
-
-    def register(self):
-        self.signalsInterface.registerListener("auth_success", self.onAuthSuccess)
-        self.signalsInterface.registerListener("auth_fail", self.onAuthFailed)
-        self.signalsInterface.registerListener("disconnected", self.onDisconnected)
-        self.signalsInterface.registerListener("receipt_messageDelivered", self.onMessageDelivered)
-        self.signalsInterface.registerListener("message_received", self.onMessageReceived)
-        self.signalsInterface.registerListener("group_messageReceived", self.onGroupMessageReceived)
 
     def onMessageDelivered(self, jid, messageId):
         print "Message was delivered successfully to %s" %jid
@@ -38,4 +29,4 @@ class Callbacks:
         print "Disconnected because %s" %reason
         if reason=="dns": time.sleep(30)
         time.sleep(1)
-        daemon.Daemon.instance().run()
+        feeder.daemon.Daemon.instance().run()

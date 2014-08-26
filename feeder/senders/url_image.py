@@ -5,14 +5,13 @@ import os, fnmatch
 import random
 import hashlib
 import base64
+from feeder.senders.base import Base
 
-class UrlImage:
+class UrlImage(Base):
     def __init__(self, whatsapp, msg):
-        self.jid = msg['jid']
-        self.url = msg['url']
-        self.whatsapp = whatsapp
-        self.interface = whatsapp.methodsInterface
         self.temp_file = None
+        self.url = msg['url']
+        super(UrlImage, self).__init__(whatsapp, msg)
 
     def prepare(self):
         n = random.randrange(1000000)
@@ -21,7 +20,7 @@ class UrlImage:
         self.temp_file.write(image.read())
         self.temp_file.close()
 
-    def send(self):
+    def performSend(self):
         self.sendImage()
 
 
@@ -30,8 +29,6 @@ class UrlImage:
         hsh, mtype, size = self.pictureData(path)
 
         self.whatsapp.hashes[hsh] = { 'jid': self.jid, 'path': path } # Redis
-
-        self.interface.call("typing_send",(self.jid,))
         print("Requesting Upload: hash %s mime_type %s size %d" %(hsh, mtype, size))
         self.interface.call("media_requestUpload", (hsh, mtype, size))
 

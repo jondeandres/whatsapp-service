@@ -35,4 +35,5 @@ class Base(object):
 
         wait_time = random.randrange(10, 40)
         self.timer = threading.Timer(wait_time, self.setUnavailable)
+        print('Waiting to send unavailable in %s seconds' % wait_time)
         self.timer.start()

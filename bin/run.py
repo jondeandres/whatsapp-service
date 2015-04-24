@@ -4,17 +4,18 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
 
-from feeder import daemon
 import os
+
+from service import daemon
 
 environments = {
     'production' : {
-        'number': '34670712491',
-        'password': 'bNioAYGeFl6IT2RQnHYcgd6XQKM='
+        'number': '',
+        'password': ''
     },
     'development': {
-        'number': '34670711623',
-        'password': 'fra/fy7ATLkQmVY/EyN26NQkoS4='
+        'number': '14153479219',
+        'password': 'rnYDbiM3ZXw917CMSwY+xPOgT6A='
     }
     }
 env = os.getenv('WENV') or 'development'
